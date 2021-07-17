@@ -24,4 +24,4 @@ yyyyMMddHHmmss,ネットワークプレフィックス長付きのIPv4アドレ�
 ```
 
 # テスト結果
-![image](https://user-images.githubusercontent.com/87558811/126040608-faa7a6b1-e4a7-45f1-8e8f-90859d2fa546.png)
+![image](https://user-images.githubusercontent.com/87558811/126043841-1e1f47d1-7bc2-4d10-8c3a-ae1b00928d9b.png)

@@ -132,7 +132,7 @@ public class MainTest {
     }
 
     @Test
-    public void test_doProcess_正常() {
+    public void test_doProcess_正常_故障期間1つのみ() {
         final String validFileName = "test/resources/valid_monitoring.log";
 
         final String[] args = new String[1];
@@ -140,5 +140,20 @@ public class MainTest {
 
         Main.main(args);
         assertEquals("IP : 1.1.1.2/16, SECONDS_TO_RETURN : 10\r\nIP : 1.1.1.1/24, SECONDS_TO_RETURN : 20\r\n", out.toString());
+    }
+
+    @Test
+    public void test_doProcess_正常_故障期間複数() {
+        final String validFileName = "test/resources/valid_monitoring_1.log";
+
+        final String[] args = new String[1];
+        args[0] = validFileName;
+
+        Main.main(args);
+        assertEquals("IP : 1.1.1.1/16, SECONDS_TO_RETURN : 10\r\n"
+                + "IP : 1.1.1.1/16, SECONDS_TO_RETURN : 10\r\n"
+                + "IP : 1.1.1.2/16, SECONDS_TO_RETURN : 10\r\n"
+                + "IP : 1.1.1.1/24, SECONDS_TO_RETURN : 20\r\n"
+                , out.toString());
     }
 }

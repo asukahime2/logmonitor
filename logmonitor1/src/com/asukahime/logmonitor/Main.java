@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -45,11 +46,12 @@ public class Main {
             final List<String> lineList = Files.lines(path).collect(Collectors.toList());
             checkFileFormat(lineList);
 
-            createTimeoutServerIPAndReturnTimePairList(lineList)
-            .forEach(pair -> System.out.println("IP : " +
-                    pair.getLeft() +
-                    ", SECONDS_TO_RETURN : " +
-                    pair.getRight()));
+            createTimeoutServerIPAndReturnTimePairList(lineList).forEach(pair -> pair.getRight().forEach(seconds -> {
+                System.out.println("IP : "
+                        + pair.getLeft()
+                        + ", SECONDS_TO_RETURN : "
+                        + seconds);
+            }));
         } catch (IOException e) {
             System.out.println(MESSAGE_FILE_CAN_NOT_READ);
         } catch (LogMonitoringException e) {
@@ -85,7 +87,7 @@ public class Main {
      * @param lineList ログファイルの各行
      * @return left:サーバーIP,right:復帰までの秒数
      */
-    private List<Pair<String, Long>> createTimeoutServerIPAndReturnTimePairList(final List<String> lineList) {
+    private List<Pair<String, List<Long>>> createTimeoutServerIPAndReturnTimePairList(final List<String> lineList) {
 
         return lineList
                 .stream()
@@ -94,7 +96,7 @@ public class Main {
                 .entrySet()
                 .stream()
                 .map(entry -> new Pair<>(entry.getKey(), calcBetweenTimeout(entry.getValue())))
-                .filter(pair -> pair.getRight() > 0)
+                .filter(pair -> !pair.getRight().isEmpty())
                 .collect(Collectors.toList());
     }
 
@@ -102,13 +104,17 @@ public class Main {
      * サーバーがタイムアウトしている場合、復帰するまでの秒数を返却します。
      *
      * @param lineList 各行
-     * @return 復帰までの秒数。タイムアウトしていない場合は0を返却
+     * @return 各サーバーがタイムアウトから復帰するまでの秒数をリストで返却。タイムアウトしていない場合は空のリスト。
      */
-    private long calcBetweenTimeout(final List<String[]> lineList) {
+    private List<Long> calcBetweenTimeout(final List<String[]> lineList) {
+
+        final List<Long> timeoutSeconds = new ArrayList<>();
 
         LocalDateTime timeoutDateTime = null;
         boolean isTimeout = false;
         for (final String[] line : lineList) {
+
+            // 連続するタイムアウトの初回のみ時刻を記録
             if (TIMEOUT_LETTER.equals(line[INDEX_RETURN_TIME])) {
                 isTimeout = true;
 
@@ -122,9 +128,14 @@ public class Main {
                 continue;
             }
 
-            return ChronoUnit.SECONDS.between(timeoutDateTime, LocalDateTime.parse(line[INDEX_CONFIRM_DATE], DATE_FORMATTER));
+            // タイムアウトから復帰した場合、復帰までの秒数を記録
+            timeoutSeconds.add(ChronoUnit.SECONDS.between(timeoutDateTime, LocalDateTime.parse(line[INDEX_CONFIRM_DATE], DATE_FORMATTER)));
+
+            // 記録用変数を初期化
+            timeoutDateTime = null;
+            isTimeout = false;
         }
 
-        return 0L;
+        return timeoutSeconds;
     }
 }
