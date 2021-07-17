@@ -15,6 +15,7 @@ java -jar logmonitor.jar ログファイルパス
 # 注意事項
 ログファイルのフォーマットは
 yyyyMMddHHmmss,ネットワークプレフィックス長付きのIPv4アドレス,pingの応答時間(ミリ秒)
+
 ※ pingの応答時間は、pingがタイムアウトした場合"-"
 
 ```
