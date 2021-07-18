@@ -13,7 +13,7 @@ Java 11
 ```bash
 git clone https://github.com/asukahime2/logmonitor.git
 cd logmonitor4/out/artifacts/logmonitor4_jar
-java -jar logmonitor.jar ログファイルパス 故障判定回数
+java -jar logmonitor4.jar ログファイルパス 故障判定回数
 ```
 
 # 注意事項
