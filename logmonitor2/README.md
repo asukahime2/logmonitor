@@ -10,7 +10,7 @@ Java 11
 
 ```bash
 git clone https://github.com/asukahime2/logmonitor.git
-cd logmonitor2/out/artifacts/logmonitor_jar
+cd logmonitor2/out/artifacts/logmonitor2_jar
 java -jar logmonitor.jar ログファイルパス 故障判定回数
 ```
 

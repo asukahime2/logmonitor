@@ -12,7 +12,7 @@ Java 11
 
 ```bash
 git clone https://github.com/asukahime2/logmonitor.git
-cd logmonitor3/out/artifacts/logmonitor_jar
+cd logmonitor3/out/artifacts/logmonitor3_jar
 java -jar logmonitor.jar ログファイルパス 故障判定回数 応答時間を平均する割り数 直近の平均応答時間の閾値
 ```
 
